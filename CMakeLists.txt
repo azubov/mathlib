@@ -4,10 +4,10 @@ project(Mathlib LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-#set(CMAKE_CXX_CLANG_TIDY "clang-tidy;--warnings-as-errors=*")
 
-option(BUILD_SHARED_LIBS "Build shared libraries" ON)
+# Библиотека без указания STATIC/SHARED → тип определяется через BUILD_SHARED_LIBS
 add_library(mathlib src/math_operations.cpp)
+
 target_include_directories(mathlib PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
