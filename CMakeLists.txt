@@ -11,6 +11,11 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # Библиотека без указания STATIC/SHARED → тип определяется через BUILD_SHARED_LIBS
 add_library(mathlib src/math_operations.cpp)
 
+# ALIAS для удобства: делает mathlib::mathlib доступным при add_subdirectory (CPM)
+if (NOT TARGET mathlib::mathlib)
+    add_library(mathlib::mathlib ALIAS mathlib)
+endif()
+
 # Версионирование библиотеки
 set_target_properties(mathlib PROPERTIES
         VERSION ${PROJECT_VERSION}
