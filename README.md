@@ -46,21 +46,23 @@ mathlib/
 В `CMakeLists.txt` вашего проекта:
 
 ```cmake
-if(NOT EXISTS "${CMAKE_BINARY_DIR}/cmake/cpm.cmake")
-    message(STATUS "Downloading CPM.cmake...")
-    file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/cmake")
+if(NOT EXISTS ${CMAKE_BINARY_DIR}/cmake/CPM.cmake)
     file(DOWNLOAD
-            https://github.com/cpm-cmake/CPM.cmake/releases/latest/download/cpm.cmake
-            "${CMAKE_BINARY_DIR}/cmake/cpm.cmake"
+            https://github.com/cpm-cmake/CPM.cmake/releases/latest/download/CPM.cmake
+            ${CMAKE_BINARY_DIR}/cmake/CPM.cmake
     )
 endif()
-include(${CMAKE_BINARY_DIR}/cmake/cpm.cmake)
+include(${CMAKE_BINARY_DIR}/cmake/CPM.cmake)
 
 CPMAddPackage(
         NAME mathlib
         VERSION 1.0.0
-        URL https://github.com/azubov/mathlib/releases/download/v1.0.0/mathlib-release-static-v1.0.0.tar.gz
+        URL "https://github.com/azubov/mathlib/releases/download/v1.0.0/mathlib-release-static-v1.0.0.tar.gz"
+        DOWNLOAD_ONLY YES
 )
+
+list(APPEND CMAKE_PREFIX_PATH "${mathlib_SOURCE_DIR}")
+find_package(mathlib CONFIG REQUIRED)
 
 add_executable(simple_calculator src/main.cpp)
 target_link_libraries(simple_calculator PRIVATE mathlib::mathlib)
