@@ -28,6 +28,75 @@ mathlib/
 - `power(base, exponent)` — возведение в степень (только для неотрицательных показателей)
 - `factorial(n)` — факториал (только для неотрицательных чисел)
 
+## 📦 Доставка артефактов
+
+Библиотека собирается в двух вариантах:
+
+- **release-static** — статическая библиотека (`libmathlib.a`)
+- **release-shared** — динамическая библиотека (`libmathlib.so`)
+
+Оба варианта публикуются в [GitHub Releases](https://github.com/azubov/mathlib/releases).
+
+---
+
+## 🔗 Подключение в другом проекте
+
+### CPM.cmake (рекомендуемый способ)
+
+В `CMakeLists.txt` вашего проекта:
+
+```cmake
+if(NOT EXISTS "${CMAKE_BINARY_DIR}/cmake/cpm.cmake")
+    message(STATUS "Downloading CPM.cmake...")
+    file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/cmake")
+    file(DOWNLOAD
+            https://github.com/cpm-cmake/CPM.cmake/releases/latest/download/cpm.cmake
+            "${CMAKE_BINARY_DIR}/cmake/cpm.cmake"
+    )
+endif()
+include(${CMAKE_BINARY_DIR}/cmake/cpm.cmake)
+
+CPMAddPackage(
+        NAME mathlib
+        VERSION 1.0.0
+        URL https://github.com/azubov/mathlib/releases/download/v1.0.0/mathlib-release-static-v1.0.0.tar.gz
+)
+
+add_executable(simple_calculator src/main.cpp)
+target_link_libraries(simple_calculator PRIVATE mathlib::mathlib)
+```
+
+### FetchContent (альтернативный способ)
+
+В `CMakeLists.txt` вашего проекта:
+
+```cmake
+include(FetchContent)
+
+FetchContent_Declare(
+        mathlib
+        GIT_REPOSITORY https://github.com/azubov/mathlib.git
+        GIT_TAG v1.0.0
+)
+
+FetchContent_MakeAvailable(mathlib)
+
+add_executable(simple_calculator src/main.cpp)
+target_link_libraries(simple_calculator PRIVATE mathlib::mathlib)
+```
+
+## 🧩 Пример использования
+
+```c++
+#include "mathlib/math_operations.h"
+#include <iostream>
+
+int main() {
+    std::cout << "2 + 3 = " << mathlib::add(2, 3) << "\n";
+    std::cout << "5! = " << mathlib::factorial(5) << "\n";
+}
+```
+
 ## 🛠️ Сборка через CMakePresets
 
 В проекте используется файл `CMakePresets.json`, который описывает готовые профили сборки.
@@ -70,37 +139,4 @@ ctest --preset debug-with-tests --output-on-failure
 ```bash
 cmake --preset debug-tidy
 cmake --build --preset debug-tidy
-```
-
-## 🔗 Подключение в другом проекте
-
-### FetchContent
-
-В CMakeLists.txt вашего проекта:
-
-```cmake
-include(FetchContent)
-
-FetchContent_Declare(
-  mathlib
-  GIT_REPOSITORY https://github.com/azubov/mathlib.git
-  GIT_TAG master   # или конкретный релиз, например v1.0.0
-)
-
-FetchContent_MakeAvailable(mathlib)
-
-add_executable(simple_calculator src/main.cpp)
-target_link_libraries(simple_calculator PRIVATE mathlib)
-```
-
-В коде:
-
-```c++
-#include "mathlib/math_operations.h"
-#include <iostream>
-
-int main() {
-    std::cout << "2 + 3 = " << mathlib::add(2, 3) << "\n";
-    std::cout << "5! = " << mathlib::factorial(5) << "\n";
-}
 ```

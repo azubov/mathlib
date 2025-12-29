@@ -1,0 +1,50 @@
+name: Build and Release Mathlib
+
+on:
+  push:
+    tags:
+      - 'v*'   # запуск при создании тега версии, например v1.0.0
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup CMake
+        uses: jwlawson/actions-setup-cmake@v1
+        with:
+          cmake-version: '3.28.3'
+
+      - name: Setup Ninja
+        uses: seanmiddleditch/gha-setup-ninja@v3
+
+      # --- Release Static ---
+      - name: Configure (release-static)
+        run: cmake --preset release-static -S . -B build-static
+      - name: Build (release-static)
+        run: cmake --build build-static --parallel
+      - name: Install (release-static)
+        run: cmake --install build-static --prefix install/static
+      - name: Pack (release-static)
+        run: tar -czf mathlib-release-static-${{ github.ref_name }}.tar.gz -C install/static .
+
+      # --- Release Shared ---
+      - name: Configure (release-shared)
+        run: cmake --preset release-shared -S . -B build-shared
+      - name: Build (release-shared)
+        run: cmake --build build-shared --parallel
+      - name: Install (release-shared)
+        run: cmake --install build-shared --prefix install/shared
+      - name: Pack (release-shared)
+        run: tar -czf mathlib-release-shared-${{ github.ref_name }}.tar.gz -C install/shared .
+
+      # --- Upload to GitHub Release ---
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            mathlib-release-static-${{ github.ref_name }}.tar.gz
+            mathlib-release-shared-${{ github.ref_name }}.tar.gz
