@@ -84,7 +84,7 @@ include(FetchContent)
 FetchContent_Declare(
   mathlib
   GIT_REPOSITORY https://github.com/azubov/mathlib.git
-  GIT_TAG main   # или конкретный релиз, например v1.0.0
+  GIT_TAG master   # или конкретный релиз, например v1.0.0
 )
 
 FetchContent_MakeAvailable(mathlib)
