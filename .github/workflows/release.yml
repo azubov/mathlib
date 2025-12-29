@@ -5,11 +5,12 @@ on:
     tags:
       - 'v*'   # запуск при создании тега версии, например v1.0.0
 
+permissions: 
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions: 
-      contents: write
 
     steps:
       - name: Checkout source
