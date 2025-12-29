@@ -44,6 +44,9 @@ jobs:
       - name: Pack (release-shared)
         run: tar -czf mathlib-release-shared-${{ github.ref_name }}.tar.gz -C install/shared .
 
+      - name: Show artifacts
+        run: ls -la mathlib-release-*.tar.gz
+
       # --- Upload to GitHub Release ---
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v1

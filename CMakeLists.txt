@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28.3)
-project(Mathlib VERSION 1.0.0
+project(mathlib VERSION 1.0.0
         DESCRIPTION "Small C++ math library"
         HOMEPAGE_URL "https://github.com/azubov/mathlib"
         LANGUAGES CXX)
