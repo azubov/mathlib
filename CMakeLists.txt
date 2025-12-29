@@ -14,38 +14,16 @@ add_library(mathlib src/math_operations.cpp)
 # Версионирование библиотеки
 set_target_properties(mathlib PROPERTIES
         VERSION ${PROJECT_VERSION}
-        SOVERSION 1)
+        SOVERSION ${PROJECT_VERSION_MAJOR})
 
 target_include_directories(mathlib PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>)
-
-# --- Установка библиотеки и заголовков ---
-install(TARGETS mathlib
-        EXPORT mathlibTargets
-        ARCHIVE DESTINATION lib
-        LIBRARY DESTINATION lib
-        RUNTIME DESTINATION bin)
-
-install(DIRECTORY include/ DESTINATION include)
-
-# --- Экспорт таргетов в пакет ---
-install(EXPORT mathlibTargets
-        FILE mathlibConfig.cmake
-        NAMESPACE mathlib::
-        DESTINATION lib/cmake/mathlib)
-
-# --- Файл версии пакета ---
-include(CMakePackageConfigHelpers)
-write_basic_package_version_file(
-        "${CMAKE_CURRENT_BINARY_DIR}/mathlibConfigVersion.cmake"
-        VERSION ${PROJECT_VERSION}
-        COMPATIBILITY AnyNewerVersion)
-
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/mathlibConfigVersion.cmake"
-        DESTINATION lib/cmake/mathlib)
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
 include(CTest)
 if (BUILD_TESTING)
     add_subdirectory(tests)
 endif ()
+
+# подключаем файл с установкой и генерацией config-файлов
+include(cmake/InstallMathlib.cmake)

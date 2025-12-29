@@ -1,0 +1,7 @@
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/MathlibTargets.cmake")
+
+if(NOT TARGET mathlib::mathlib)
+  message(FATAL_ERROR "mathlib::mathlib target not found. MathlibTargets.cmake may be missing or corrupted.")
+endif()
