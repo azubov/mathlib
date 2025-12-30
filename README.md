@@ -16,6 +16,7 @@ mathlib/
 │   └── CMakeLists.txt
 │   └── test_math.cpp
 ├── CMakeLists.txt
+├── CMakePresets.json
 └── README.md
 ```
 
@@ -28,63 +29,35 @@ mathlib/
 - `power(base, exponent)` — возведение в степень (только для неотрицательных показателей)
 - `factorial(n)` — факториал (только для неотрицательных чисел)
 
-## 📦 Доставка артефактов
-
-Библиотека собирается в двух вариантах:
-
-- **release-static** — статическая библиотека (`libmathlib.a`)
-- **release-shared** — динамическая библиотека (`libmathlib.so`)
-
-Оба варианта публикуются в [GitHub Releases](https://github.com/azubov/mathlib/releases).
-
----
-
 ## 🔗 Подключение в другом проекте
 
-### CPM.cmake (рекомендуемый способ)
-
-В `CMakeLists.txt` вашего проекта:
-
-```cmake
-if(NOT EXISTS ${CMAKE_BINARY_DIR}/cmake/CPM.cmake)
-    file(DOWNLOAD
-            https://github.com/cpm-cmake/CPM.cmake/releases/latest/download/CPM.cmake
-            ${CMAKE_BINARY_DIR}/cmake/CPM.cmake
-    )
-endif()
-include(${CMAKE_BINARY_DIR}/cmake/CPM.cmake)
-
-CPMAddPackage(
-        NAME mathlib
-        VERSION 1.0.0
-        URL "https://github.com/azubov/mathlib/releases/download/v1.0.0/mathlib-release-static-v1.0.0.tar.gz"
-        DOWNLOAD_ONLY YES
-)
-
-list(APPEND CMAKE_PREFIX_PATH "${mathlib_SOURCE_DIR}")
-find_package(mathlib CONFIG REQUIRED)
-
-add_executable(simple_calculator src/main.cpp)
-target_link_libraries(simple_calculator PRIVATE mathlib::mathlib)
-```
-
-### FetchContent (альтернативный способ)
+### FetchContent
 
 В `CMakeLists.txt` вашего проекта:
 
 ```cmake
 include(FetchContent)
-
 FetchContent_Declare(
         mathlib
         GIT_REPOSITORY https://github.com/azubov/mathlib.git
-        GIT_TAG v1.0.0
+        GIT_TAG master
 )
-
 FetchContent_MakeAvailable(mathlib)
+```
 
-add_executable(simple_calculator src/main.cpp)
-target_link_libraries(simple_calculator PRIVATE mathlib::mathlib)
+ Сборка `static` в `CMakeLists.txt`:
+```cmake
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build static libraries" FORCE)
+```
+
+Сборка `shared` в `CMakeLists.txt`:
+```cmake
+set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries" FORCE)
+```
+
+Линковка в `CMakeLists.txt`:
+```cmake
+target_link_libraries(my_app PRIVATE mathlib)
 ```
 
 ## 🧩 Пример использования
@@ -105,40 +78,38 @@ int main() {
 
 ### Доступные пресеты
 
-| Пресет          | Тип библиотеки | Режим   | Тесты | Clang‑tidy `--warnings-as-errors=*` |
-|-----------------|----------------|---------|-------|-------------|
-| `release-shared`  | `Shared (.so/.dll)` | `Release` | ❌    | ❌           |
-| `release-static`  | `Static (.a/.lib)`  | `Release` | ❌    | ❌           |
-| `debug-with-tests` | `Static`           | `Debug`   | ✅    | ❌           |
-| `debug-tidy`      | `Static`           | `Debug`   | ❌    | ✅           |
+- **debug** — сборка в режиме Debug, включает тесты и clang-tidy. 
+- **release** — оптимизированная сборка в режиме Release, без тестов. 
+- **shared** — сборка Release с динамической библиотекой, без тестов.
+- **static** — сборка Release со статической библиотекой, без тестов.
 
 ### Использование
+
+Сборка debug-версии с тестами и clang-tidy:
+
+```bash
+cmake --preset debug
+cmake --build --preset debug
+ctest --preset debug --output-on-failure
+```
+
+Сборка release‑версии (по умолчанию статическая):
+
+```bash
+cmake --preset release 
+cmake --build --preset release
+```
 
 Сборка shared‑версии:
 
 ```bash
-cmake --preset release-shared
-cmake --build --preset release-shared
+cmake --preset shared
+cmake --build --preset shared
 ```
 
 Сборка static‑версии:
 
 ```bash
-cmake --preset release-static
-cmake --build --preset release-static
-```
-
-Сборка с тестами:
-
-```bash
-cmake --preset debug-with-tests
-cmake --build --preset debug-with-tests
-ctest --preset debug-with-tests --output-on-failure
-```
-
-Сборка с clang‑tidy:
-
-```bash
-cmake --preset debug-tidy
-cmake --build --preset debug-tidy
+cmake --preset static
+cmake --build --preset static
 ```

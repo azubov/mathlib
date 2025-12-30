@@ -2,80 +2,79 @@
   "version": 3,
   "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 23
+    "minor": 15,
+    "patch": 0
   },
   "configurePresets": [
     {
-      "name": "release-shared",
-      "displayName": "Release build (shared)",
+      "name": "default",
+      "hidden": true,
       "generator": "Ninja",
-      "binaryDir": "${sourceDir}/cmake-build-shared",
+      "binaryDir": "${sourceDir}/build/${presetName}",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release",
-        "BUILD_SHARED_LIBS": "ON",
-        "BUILD_TESTING": "OFF"
+        "CMAKE_CXX_STANDARD": "17",
+        "CMAKE_CXX_STANDARD_REQUIRED": "ON"
       }
     },
     {
-      "name": "release-static",
-      "displayName": "Release build (static)",
-      "generator": "Ninja",
-      "binaryDir": "${sourceDir}/cmake-build-static",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release",
-        "BUILD_SHARED_LIBS": "OFF",
-        "BUILD_TESTING": "OFF"
-      }
-    },
-    {
-      "name": "debug-with-tests",
-      "displayName": "Debug build (with tests)",
-      "generator": "Ninja",
-      "binaryDir": "${sourceDir}/cmake-build-debug-tests",
+      "name": "debug",
+      "inherits": "default",
+      "description": "Debug build with tests enabled",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
-        "BUILD_SHARED_LIBS": "OFF",
-        "BUILD_TESTING": "ON"
-      }
-    },
-    {
-      "name": "debug-tidy",
-      "displayName": "Debug build (clang-tidy only)",
-      "generator": "Ninja",
-      "binaryDir": "${sourceDir}/cmake-build-debug-tidy",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "BUILD_SHARED_LIBS": "OFF",
-        "BUILD_TESTING": "OFF",
+        "MATHLIB_BUILD_TESTS": "ON",
         "CMAKE_CXX_CLANG_TIDY": "clang-tidy;--warnings-as-errors=*"
+      }
+    },
+    {
+      "name": "release",
+      "inherits": "default",
+      "description": "Release build (optimized, no tests)",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "MATHLIB_BUILD_TESTS": "OFF"
+      }
+    },
+    {
+      "name": "shared",
+      "inherits": "release",
+      "description": "Release build with shared library",
+      "cacheVariables": {
+        "BUILD_SHARED_LIBS": "ON"
+      }
+    },
+    {
+      "name": "static",
+      "inherits": "release",
+      "description": "Release build with static library",
+      "cacheVariables": {
+        "BUILD_SHARED_LIBS": "OFF"
       }
     }
   ],
   "buildPresets": [
     {
-      "name": "release-shared",
-      "configurePreset": "release-shared"
+      "name": "debug",
+      "configurePreset": "debug"
     },
     {
-      "name": "release-static",
-      "configurePreset": "release-static"
+      "name": "release",
+      "configurePreset": "release"
     },
     {
-      "name": "debug-with-tests",
-      "configurePreset": "debug-with-tests"
+      "name": "shared",
+      "configurePreset": "shared"
     },
     {
-      "name": "debug-tidy",
-      "configurePreset": "debug-tidy"
+      "name": "static",
+      "configurePreset": "static"
     }
   ],
   "testPresets": [
     {
-      "name": "debug-with-tests",
-      "configurePreset": "debug-with-tests",
-      "execution": {
-        "jobs": 4
-      }
+      "name": "debug",
+      "configurePreset": "debug",
+      "output": {"outputOnFailure": true}
     }
   ]
 }
