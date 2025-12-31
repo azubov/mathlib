@@ -4,6 +4,10 @@
 #include <limits>
 #include <stdexcept>
 
+namespace {
+    constexpr std::uint64_t kMaxFactorialInput = 20ULL;
+}
+
 namespace mathlib {
     std::int64_t add(std::int64_t lhs, std::int64_t rhs) {
         if (rhs > 0 && lhs > std::numeric_limits<std::int64_t>::max() - rhs) {
@@ -63,14 +67,17 @@ namespace mathlib {
         return result;
     }
 
-    std::int64_t factorial(std::int64_t n) {
+    std::uint64_t factorial(std::int64_t n) {
         if (n < 0) {
             throw std::invalid_argument("Factorial is not defined for negative numbers");
         }
+        if (n > kMaxFactorialInput) {
+            throw std::overflow_error("Factorial exceeds uint64_t range");
+        }
 
         if (n == 0 || n == 1) {
-            return 1;
+            return 1ULL;
         }
-        return multiply(n, factorial(n - 1));
+        return static_cast<std::uint64_t>(n) * factorial(n - 1);
     }
 } // namespace mathlib
