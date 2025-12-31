@@ -45,17 +45,40 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(mathlib)
 ```
 
- Сборка `static` в `CMakeLists.txt`:
+### Сборка
+
+#### Статическая библиотека (static)
+
+В `CMakeLists.txt` вашего проекта:
+
 ```cmake
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build static libraries" FORCE)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build static libraries")
 ```
 
-Сборка `shared` в `CMakeLists.txt`:
-```cmake
-set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries" FORCE)
+или при вызове `cmake`:
+
+```bash
+cmake -DBUILD_SHARED_LIBS=OFF --preset release
 ```
+
+#### Динамическая библиотека (shared)
+
+В `CMakeLists.txt` вашего проекта:
+
+```cmake
+set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries")
+```
+
+или при вызове `cmake`:
+
+```bash
+cmake -DBUILD_SHARED_LIBS=ON --preset release
+```
+
+### Линковка
 
 Линковка в `CMakeLists.txt`:
+
 ```cmake
 target_link_libraries(my_app PRIVATE mathlib)
 ```
@@ -74,18 +97,18 @@ int main() {
 
 ## 🛠️ Сборка через CMakePresets
 
-В проекте используется файл `CMakePresets.json`, который описывает готовые профили сборки.
+В проекте используется файл `CMakePresets.json`, который описывает готовые профили сборки и автоматически включает нужные флаги компиляции.
 
 ### Доступные пресеты
 
-- **debug** — сборка в режиме Debug, включает тесты и clang-tidy. 
-- **release** — оптимизированная сборка в режиме Release, без тестов. 
-- **shared** — сборка Release с динамической библиотекой, без тестов.
-- **static** — сборка Release со статической библиотекой, без тестов.
+- **debug** — сборка в режиме `Debug`, включает тесты, `clang-tidy` и строгие предупреждения (`-Wall -Wextra -Wpedantic -Werror`). 
+- **release** — оптимизированная сборка в режиме `Release`, без тестов, с мягкими предупреждениями. 
+- **shared** — сборка **release** с динамической библиотекой.
+- **static** — сборка **release** со статической библиотекой.
 
 ### Использование
 
-Сборка debug-версии с тестами и clang-tidy:
+Сборка **debug** версии с тестами и `clang-tidy`:
 
 ```bash
 cmake --preset debug
@@ -93,21 +116,21 @@ cmake --build --preset debug
 ctest --preset debug --output-on-failure
 ```
 
-Сборка release‑версии (по умолчанию статическая):
+Сборка **release** версии (`Release` сборка по умолчанию создаёт статическую библиотеку (если не указан флаг `BUILD_SHARED_LIBS`)):
 
 ```bash
 cmake --preset release 
 cmake --build --preset release
 ```
 
-Сборка shared‑версии:
+Сборка **shared** версии:
 
 ```bash
 cmake --preset shared
 cmake --build --preset shared
 ```
 
-Сборка static‑версии:
+Сборка **static** версии:
 
 ```bash
 cmake --preset static
