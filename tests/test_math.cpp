@@ -32,7 +32,7 @@ TEST(MathlibTest, exponentiation) {
 }
 
 TEST(MathlibTest, factorial) {
-    EXPECT_EQ(mathlib::factorial(4), 24ULL);
+    EXPECT_EQ(mathlib::factorial(4), 24);
     EXPECT_THROW(mathlib::factorial(-1), std::invalid_argument);
     EXPECT_THROW(mathlib::factorial(21), std::overflow_error);
 }

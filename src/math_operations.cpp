@@ -5,7 +5,7 @@
 #include <stdexcept>
 
 namespace {
-    constexpr std::uint64_t kMaxFactorialInput = 20ULL;
+    constexpr std::int64_t kMaxFactorialInput = 20;
 }
 
 namespace mathlib {
@@ -76,7 +76,7 @@ namespace mathlib {
         }
 
         if (n == 0 || n == 1) {
-            return 1ULL;
+            return 1;
         }
         return static_cast<std::uint64_t>(n) * factorial(n - 1);
     }

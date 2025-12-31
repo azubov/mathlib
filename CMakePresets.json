@@ -20,20 +20,23 @@
     {
       "name": "debug",
       "inherits": "default",
-      "description": "Debug build with tests enabled",
+      "description": "Debug build with tests enabled + strict warnings and sanitizers",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "MATHLIB_BUILD_TESTS": "ON",
-        "CMAKE_CXX_CLANG_TIDY": "clang-tidy;--warnings-as-errors=*"
+        "CMAKE_CXX_CLANG_TIDY": "clang-tidy;--warnings-as-errors=*",
+        "CMAKE_CXX_FLAGS": "-Wall -Wextra -Wpedantic -Werror -Wsign-compare -Wconversion -Wshadow -Wnon-virtual-dtor -fsanitize=address,undefined -fno-omit-frame-pointer",
+        "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=address,undefined -fno-omit-frame-pointer"
       }
     },
     {
       "name": "release",
       "inherits": "default",
-      "description": "Release build (optimized, no tests)",
+      "description": "Release build (optimized, без тестов, мягкие варнинги)",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
-        "MATHLIB_BUILD_TESTS": "OFF"
+        "MATHLIB_BUILD_TESTS": "OFF",
+        "CMAKE_CXX_FLAGS": "-Wall -Wextra -Wpedantic"
       }
     },
     {
@@ -75,7 +78,9 @@
     {
       "name": "debug",
       "configurePreset": "debug",
-      "output": {"outputOnFailure": true}
+      "output": {
+        "outputOnFailure": true
+      }
     }
   ]
 }
