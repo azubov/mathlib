@@ -32,7 +32,7 @@
     {
       "name": "release",
       "inherits": "default",
-      "description": "Release build (optimized, без тестов, мягкие варнинги)",
+      "description": "Release build (optimized, no tests, soft warnings)",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
         "MATHLIB_BUILD_TESTS": "OFF",
