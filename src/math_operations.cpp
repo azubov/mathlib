@@ -67,17 +67,17 @@ namespace mathlib {
         return result;
     }
 
-    std::uint64_t factorial(std::int64_t n) {
+    std::int64_t factorial(std::int64_t n) {
         if (n < 0) {
             throw std::invalid_argument("Factorial is not defined for negative numbers");
         }
         if (n > kMaxFactorialInput) {
-            throw std::overflow_error("Factorial exceeds uint64_t range");
+            throw std::overflow_error("Factorial exceeds int64_t range");
         }
 
         if (n == 0 || n == 1) {
             return 1;
         }
-        return static_cast<std::uint64_t>(n) * factorial(n - 1);
+        return n * factorial(n - 1);
     }
 } // namespace mathlib
