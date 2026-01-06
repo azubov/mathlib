@@ -1,12 +1,12 @@
-#include "mathlib/math_operations.h"
-
 #include <cstdint>
 #include <limits>
 #include <stdexcept>
 
+#include "mathlib/math_operations.h"
+
 namespace {
-    constexpr std::int64_t kMaxFactorialInput = 20;
-}
+    constexpr std::int64_t max_factorial_input = 20;
+} // namespace
 
 namespace mathlib {
     std::int64_t add(std::int64_t lhs, std::int64_t rhs) {
@@ -71,7 +71,7 @@ namespace mathlib {
         if (n < 0) {
             throw std::invalid_argument("Factorial is not defined for negative numbers");
         }
-        if (n > kMaxFactorialInput) {
+        if (n > max_factorial_input) {
             throw std::overflow_error("Factorial exceeds int64_t range");
         }
 
